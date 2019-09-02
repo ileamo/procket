@@ -120,7 +120,11 @@ iowr(Type,NR,Size) ->
 
 os() ->
     case os:type() of
-        {unix, linux} -> linux;
+        {unix, linux} ->
+          case erlang:system_info(endian) of
+            little -> linux;
+            big -> bsd
+          end;
         {unix,BSD} when BSD == darwin;
             BSD == openbsd;
             BSD == netbsd;
